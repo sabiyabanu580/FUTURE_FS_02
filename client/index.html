@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini CRM - Leads</title>
+
+  <style>
+
+/* ===== GLOBAL ===== */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f1f5f9;
+  display: flex;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #0f172a;
+  color: white;
+  position: fixed;
+  padding-top: 20px;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+.sidebar a {
+  display: block;
+  padding: 14px 20px;
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  background: #1e293b;
+  padding-left: 25px;
+}
+
+/* ===== MAIN AREA ===== */
+.main {
+  margin-left: 220px;
+  width: 100%;
+  padding: 40px;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg,#0f172a,#1e3a8a);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 35px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* ===== CENTER FORM CARD ===== */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  margin: auto;
+  margin-bottom: 30px;
+  max-width: 520px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+/* ===== INPUTS ===== */
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #1e40af;
+  outline: none;
+  box-shadow: 0 0 8px rgba(30,64,175,0.25);
+}
+
+/* ===== BUTTON ===== */
+button {
+  width: 100%;
+  background: linear-gradient(135deg,#1e40af,#2563eb);
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(37,99,235,0.3);
+}
+
+/* ===== LEAD LIST CARD ===== */
+.card:last-child {
+  max-width: 750px;
+}
+
+/* ===== LEAD ITEMS ===== */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: #ffffff;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.2s;
+}
+
+li:hover {
+  background: #f8fafc;
+}
+
+/* ===== SMALL DELETE BUTTON ===== */
+.delete-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 5px 10px;     /* smaller size */
+  font-size: 11px;       /* smaller text */
+  border-radius: 5px;
+  cursor: pointer;
+  width: auto;           /* prevent full width */
+  min-width: 60px;
+  transition: 0.2s;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Mini CRM</h2>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="index.html">Leads</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="header">
+  <h2>Lead Management</h2>
+  <p>Add and manage customer leads</p>
+</div>
+
+<!-- ADD LEAD FORM -->
+<div class="card">
+  <h3>Add New Lead</h3>
+
+  <input id="name" placeholder="Full Name">
+  <input id="email" placeholder="Email Address">
+  <input id="phone" placeholder="Phone Number">
+
+  <button onclick="addLead()">Add Lead</button>
+</div>
+
+<!-- LEADS LIST -->
+<div class="card">
+  <h3>Lead List</h3>
+  <ul id="leadList"></ul>
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

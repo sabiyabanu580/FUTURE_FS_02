@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Tasks</h2>
+
+<input id="title" placeholder="Task Title">
+<input id="assigned" placeholder="Assigned To">
+<button onclick="addTask()">Add Task</button>
+
+<ul id="taskList"></ul>
+
+<script>
+const API="http://localhost:5000/api/tasks";
+
+async function addTask(){
+
+ await fetch(API,{
+  method:"POST",
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({
+    title:document.getElementById("title").value,
+    assignedTo:document.getElementById("assigned").value
+  })
+ });
+
+ loadTasks();
+}
+
+async function loadTasks(){
+
+ const res=await fetch(API);
+ const data=await res.json();
+
+ document.getElementById("taskList").innerHTML=
+ data.map(t=>`
+   <li>
+     ${t.title} (${t.status})
+   </li>
+ `).join("");
+}
+
+loadTasks();
+</script>
+
+</body>
+</html>

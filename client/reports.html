@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Reports</h2>
+
+<button onclick="exportReport()">Export JSON Report</button>
+
+<script>
+async function exportReport(){
+
+ const res = await fetch(
+   "http://localhost:5000/api/reports/summary"
+ );
+
+ const data = await res.json();
+
+ const blob = new Blob(
+   [JSON.stringify(data,null,2)],
+   {type:"application/json"}
+ );
+
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download="crm-report.json";
+ a.click();
+}
+</script>
+
+</body>
+</html>

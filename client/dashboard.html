@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini CRM Dashboard</title>
+
+<style>
+
+/* ================= GLOBAL ================= */
+body{
+  margin:0;
+  font-family:"Segoe UI", Arial, sans-serif;
+  background:#f1f5f9;
+  display:flex;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+  width:230px;
+  height:100vh;
+  background:#0f172a;
+  color:white;
+  position:fixed;
+  padding-top:20px;
+}
+
+.sidebar h2{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.sidebar a{
+  display:block;
+  padding:14px 20px;
+  color:white;
+  text-decoration:none;
+  transition:.3s;
+}
+
+.sidebar a:hover{
+  background:#1e293b;
+  padding-left:25px;
+}
+
+.sidebar a.active{
+  background:#2563eb;
+}
+
+/* ================= MAIN ================= */
+.main{
+  margin-left:230px;
+  width:100%;
+  padding:25px;
+}
+
+/* ================= TOPBAR ================= */
+.topbar{
+  background:white;
+  padding:15px 20px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+  box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+.search{
+  padding:8px 12px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  width:250px;
+}
+
+.profile{
+  font-weight:bold;
+  color:#0f172a;
+}
+
+/* ================= HEADER ================= */
+.header{
+  background:linear-gradient(135deg,#0f172a,#1e3a8a);
+  color:white;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:25px;
+  box-shadow:0 6px 14px rgba(0,0,0,.15);
+}
+
+/* ================= CARDS ================= */
+.dashboard{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:30px;
+}
+
+.card{
+  flex:1;
+  min-width:220px;
+  background:#0f172a;
+  color:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 6px 14px rgba(0,0,0,.15);
+  transition:.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.card p{
+  font-size:34px;
+  margin-top:10px;
+  font-weight:bold;
+}
+
+/* ================= TABLE ================= */
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+th{
+  background:#0f172a;
+  color:white;
+  padding:12px;
+  text-align:left;
+}
+
+td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+}
+
+tr:hover{
+  background:#f8fafc;
+}
+
+/* ================= BADGES ================= */
+.badge{
+  padding:5px 10px;
+  border-radius:6px;
+  font-size:12px;
+  color:white;
+}
+
+.new{ background:#22c55e; }
+.contacted{ background:#3b82f6; }
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+  <h2>Mini CRM</h2>
+
+  <a class="active" href="dashboard.html">📊 Dashboard</a>
+  <a href="index.html">👥 Leads</a>
+  <a href="#">📈 Analytics</a>
+  <a href="#">✅ Tasks</a>
+  <a href="#">📑 Reports</a>
+  <a href="#">⚙️ Settings</a>
+</div>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <input class="search" placeholder="Search leads...">
+    <div class="profile">Admin 👤</div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h2>Welcome Admin 👋</h2>
+    <p>CRM Overview & Lead Analytics</p>
+  </div>
+
+  <!-- DASHBOARD CARDS -->
+  <div class="dashboard">
+
+    <div class="card">
+      <h3>Total Leads</h3>
+      <p id="totalLeads">0</p>
+    </div>
+
+    <div class="card">
+      <h3>New Leads</h3>
+      <p id="newLeads">0</p>
+    </div>
+
+    <div class="card">
+      <h3>Conversion Rate</h3>
+      <p id="conversion">0%</p>
+    </div>
+
+    <div class="card">
+      <h3>Last Update</h3>
+      <p id="lastUpdate">--</p>
+    </div>
+
+  </div>
+
+  <!-- RECENT LEADS -->
+  <h3>Recent Leads</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody id="recentLeads"></tbody>
+  </table>
+
+</div>
+
+<!-- ================= DASHBOARD SCRIPT ================= -->
+<script>
+
+const API = "http://localhost:5000/api/leads";
+
+/* LOAD STATS */
+async function loadStats(){
+  const res = await fetch(API + "/stats?t=" + Date.now());
+  const stats = await res.json();
+
+  document.getElementById("totalLeads").innerText = stats.totalLeads;
+  document.getElementById("newLeads").innerText = stats.newLeads;
+
+  const conversion =
+    stats.totalLeads === 0 ? 0 :
+    Math.round((stats.newLeads / stats.totalLeads) * 100);
+
+  document.getElementById("conversion").innerText = conversion + "%";
+
+  document.getElementById("lastUpdate").innerText =
+    new Date().toLocaleTimeString();
+}
+
+/* LOAD RECENT LEADS */
+async function loadRecent(){
+  const res = await fetch(API + "?t=" + Date.now());
+  const data = await res.json();
+
+  const table = document.getElementById("recentLeads");
+
+  table.innerHTML = data.slice(0,5).map(l => `
+    <tr>
+      <td>${l.name || "N/A"}</td>
+      <td>${l.phone || "-"}</td>
+      <td>
+        <span class="badge new">${l.status || "New"}</span>
+      </td>
+    </tr>
+  `).join("");
+}
+
+/* LOAD DASHBOARD */
+async function loadDashboard(){
+  await loadStats();
+  await loadRecent();
+}
+
+loadDashboard();
+
+/* AUTO REFRESH (Realtime CRM) */
+setInterval(loadDashboard, 3000);
+
+</script>
+
+</body>
+</html>

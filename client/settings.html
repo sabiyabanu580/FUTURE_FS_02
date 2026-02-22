@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>CRM Settings</h2>
+
+<input id="company" placeholder="Company Name">
+<input id="email" placeholder="Admin Email">
+
+<button onclick="saveSettings()">Save</button>
+
+<script>
+
+const API="http://localhost:5000/api/settings";
+
+async function saveSettings(){
+
+ await fetch(API,{
+  method:"POST",
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({
+    companyName:company.value,
+    adminEmail:email.value
+  })
+ });
+
+ alert("Settings Saved");
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Analytics</title>
+</head>
+
+<body>
+
+<h2>CRM Analytics</h2>
+
+<p>Total Leads: <span id="total"></span></p>
+<p>New Leads: <span id="new"></span></p>
+<p>Contacted: <span id="contacted"></span></p>
+<p>Total Tasks: <span id="tasks"></span></p>
+
+<script>
+async function loadAnalytics(){
+
+ const res = await fetch(
+   "http://localhost:5000/api/reports/summary"
+ );
+
+ const data = await res.json();
+
+ document.getElementById("total").innerText=data.totalLeads;
+ document.getElementById("new").innerText=data.newLeads;
+ document.getElementById("contacted").innerText=data.contacted;
+ document.getElementById("tasks").innerText=data.tasks;
+}
+
+loadAnalytics();
+</script>
+
+</body>
+</html>
